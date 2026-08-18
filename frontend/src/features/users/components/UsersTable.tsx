@@ -3,10 +3,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import type { User } from '@/types/user';
 
-const ROLE_COLOR: Record<string, 'yellow' | 'blue' | 'green'> = {
-  admin: 'yellow',
-  qa_officer: 'blue',
-  program_coordinator: 'green',
+const ROLE_COLOR: Record<string, 'brand' | 'blue' | 'gray'> = {
+  admin: 'brand',
+  qa_officer: 'gray',
+  program_coordinator: 'blue',
 };
 
 function initials(name: string): string {
@@ -42,10 +42,10 @@ export function UsersTable({ users, currentUserId, onEdit, onToggleActive, onDel
             <TableRow key={user.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-50 text-xs font-semibold text-brand-700 dark:bg-gray-800 dark:text-gray-300">
                     {initials(user.name)}
                   </span>
-                  <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
+                  <span className="font-medium text-brand-950 dark:text-white">{user.name}</span>
                 </div>
               </TableCell>
               <TableCell>{user.email}</TableCell>

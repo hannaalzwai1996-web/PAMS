@@ -36,7 +36,7 @@ export function ProgramObjectivesTable({ objectives, onEdit, onDelete, onAdd }: 
         {objectives.map((objective) => (
           <TableRow key={objective.id}>
             <TableCell>
-              <span className="font-medium text-gray-900 dark:text-white">{objective.code}</span>
+              <span className="font-medium text-brand-950 dark:text-white">{objective.code}</span>
             </TableCell>
             <TableCell>
               <span className="block max-w-2xl">{objective.statement}</span>

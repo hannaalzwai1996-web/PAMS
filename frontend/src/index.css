@@ -1,7 +1,30 @@
 @import 'tailwindcss';
 
+/**
+ * PAMS design system — a muted, desaturated academic blue rather than a
+ * vivid SaaS indigo. `brand-800/900` carries primary actions and navy
+ * heading typography; `brand-50` is the "very light blue" accent
+ * background reserved for active/selected states, never the whole page
+ * canvas (the interface stays white-dominant — see `--color-surface`).
+ */
 @theme {
   --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  --color-brand-50: #eef3f8;
+  --color-brand-100: #dce7f1;
+  --color-brand-200: #b9cfe3;
+  --color-brand-300: #93b3d1;
+  --color-brand-400: #6a93ba;
+  --color-brand-500: #4c76a0;
+  --color-brand-600: #3a5f85;
+  --color-brand-700: #2f4d6d;
+  --color-brand-800: #263f59;
+  --color-brand-900: #1f3349;
+  --color-brand-950: #14212f;
+
+  /* The main content canvas — a near-white, faintly blue-tinted gray, distinct from white cards/panels. */
+  --color-surface: #f6f8fa;
+  --color-surface-dark: #0b1420;
 }
 
 :root {
@@ -11,5 +34,5 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  @apply bg-white text-gray-800 dark:bg-surface-dark dark:text-gray-100;
 }

@@ -2,14 +2,14 @@ import type { ReactNode } from 'react';
 
 export function Table({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div className="overflow-x-auto rounded-md border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">{children}</table>
     </div>
   );
 }
 
 export function TableHead({ children }: { children: ReactNode }) {
-  return <thead className="bg-gray-50 dark:bg-gray-800">{children}</thead>;
+  return <thead className="bg-brand-50/60 dark:bg-gray-800">{children}</thead>;
 }
 
 export function TableBody({ children }: { children: ReactNode }) {
@@ -19,7 +19,7 @@ export function TableBody({ children }: { children: ReactNode }) {
 }
 
 export function TableRow({ children }: { children: ReactNode }) {
-  return <tr className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/60">{children}</tr>;
+  return <tr className="transition-colors hover:bg-brand-50/40 dark:hover:bg-gray-800/60">{children}</tr>;
 }
 
 export function TableHeaderCell({ children }: { children: ReactNode }) {

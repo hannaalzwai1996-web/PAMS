@@ -42,7 +42,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10">
+      <div className="relative w-full max-w-lg rounded-md bg-white p-6 shadow-lg ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10">
         <button
           type="button"
           aria-label="Close dialog"
@@ -51,7 +51,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         >
           <XIcon className="h-5 w-5" />
         </button>
-        <h2 className="pr-8 text-base font-semibold text-gray-900 dark:text-white">{title}</h2>
+        <h2 className="pr-8 text-base font-semibold text-brand-950 dark:text-white">{title}</h2>
         <div className="mt-4">{children}</div>
       </div>
     </div>

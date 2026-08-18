@@ -18,11 +18,11 @@ const NAV_ITEMS: NavItem[] = [
 function Brand() {
   return (
     <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-gray-200 px-5 dark:border-gray-800">
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white">
+      <span className="flex h-9 w-9 items-center justify-center rounded-md bg-brand-800 text-white">
         <CheckBadgeIcon className="h-5 w-5" />
       </span>
       <div className="leading-tight">
-        <p className="text-sm font-bold tracking-wide text-gray-900 dark:text-white">PAMS</p>
+        <p className="text-sm font-bold tracking-wide text-brand-950 dark:text-white">PAMS</p>
         <p className="text-[11px] text-gray-500 dark:text-gray-400">Quality Assurance</p>
       </div>
     </div>
@@ -47,7 +47,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
             cn(
               'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               isActive
-                ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300'
+                ? 'bg-brand-50 text-brand-800 dark:bg-brand-500/10 dark:text-brand-300'
                 : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
             )
           }
@@ -76,7 +76,7 @@ export function MobileSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: (
   return (
     <div className="fixed inset-0 z-40 lg:hidden">
       <button type="button" aria-label="Close navigation menu" className="fixed inset-0 bg-gray-900/60" onClick={onClose} />
-      <div className="relative flex h-full w-72 max-w-[80%] flex-col bg-white shadow-xl dark:bg-gray-900">
+      <div className="relative flex h-full w-72 max-w-[80%] flex-col bg-white shadow-md dark:bg-gray-900">
         <Brand />
         <button
           type="button"

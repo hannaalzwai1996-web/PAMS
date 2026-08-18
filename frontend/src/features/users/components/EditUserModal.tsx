@@ -89,7 +89,7 @@ export function EditUserModal({ user, onClose }: EditUserModalProps) {
             type="checkbox"
             checked={isActive}
             onChange={(event) => setIsActive(event.target.checked)}
-            className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+            className="rounded border-gray-300 text-brand-700 focus:ring-brand-700"
           />
           Active
         </label>

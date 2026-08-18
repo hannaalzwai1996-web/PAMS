@@ -5,8 +5,8 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { CheckBadgeIcon } from '@/components/icons';
 import type { LearningOutcome, LearningOutcomeCategory } from '@/types/program';
 
-const CATEGORY_COLOR: Record<LearningOutcomeCategory, 'indigo' | 'blue' | 'green' | 'yellow'> = {
-  A: 'indigo',
+const CATEGORY_COLOR: Record<LearningOutcomeCategory, 'brand' | 'blue' | 'green' | 'yellow'> = {
+  A: 'brand',
   B: 'blue',
   C: 'green',
   D: 'yellow',
@@ -45,7 +45,7 @@ export function LearningOutcomesTable({ outcomes, onEdit, onDelete, onAdd }: Lea
         {outcomes.map((outcome) => (
           <TableRow key={outcome.id}>
             <TableCell>
-              <span className="font-medium text-gray-900 dark:text-white">{outcome.code}</span>
+              <span className="font-medium text-brand-950 dark:text-white">{outcome.code}</span>
             </TableCell>
             <TableCell>
               <span className="block max-w-2xl">{outcome.statement}</span>

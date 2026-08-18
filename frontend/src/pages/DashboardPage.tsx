@@ -70,11 +70,11 @@ export function DashboardPage() {
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
     <Card className="flex items-center gap-3 p-4">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-400">
         {icon}
       </span>
       <div>
-        <p className="text-xl font-semibold leading-none text-gray-900 dark:text-white">{value}</p>
+        <p className="text-xl font-semibold leading-none text-brand-950 dark:text-white">{value}</p>
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{label}</p>
       </div>
     </Card>

@@ -29,7 +29,7 @@ export function AppLayout() {
   const roleLabel = user ? (ROLE_LABELS[user.roles[0]] ?? user.roles[0]) : '';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-surface dark:bg-surface-dark">
       <Sidebar />
       <MobileSidebar isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
 
@@ -45,8 +45,8 @@ export function AppLayout() {
               >
                 <MenuIcon className="h-6 w-6" />
               </button>
-              <span className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white lg:hidden">
-                <CheckBadgeIcon className="h-5 w-5 text-indigo-600" />
+              <span className="flex items-center gap-2 text-sm font-bold text-brand-950 dark:text-white lg:hidden">
+                <CheckBadgeIcon className="h-5 w-5 text-brand-800" />
                 PAMS
               </span>
             </div>
@@ -56,7 +56,7 @@ export function AppLayout() {
                 <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">{roleLabel}</p>
               </div>
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-800 text-sm font-semibold text-white">
                 {user ? initials(user.name) : ''}
               </span>
               <Button variant="secondary" onClick={() => void logout()}>
