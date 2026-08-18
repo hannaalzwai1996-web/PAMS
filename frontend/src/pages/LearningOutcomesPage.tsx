@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
+import { PageHeader } from '@/components/ui/PageHeader';
 import {
   useLearningOutcomes,
   useDeleteLearningOutcome,
 } from '@/features/learning-outcomes/hooks/useLearningOutcomes';
+import { useProgramContext } from '@/features/programs/hooks/useProgramContext';
 import { LearningOutcomesTable } from '@/features/learning-outcomes/components/LearningOutcomesTable';
 import { LearningOutcomeFormModal } from '@/features/learning-outcomes/components/LearningOutcomeFormModal';
 import { toApiError } from '@/utils/apiError';
@@ -15,6 +17,7 @@ export function LearningOutcomesPage() {
   const { programId = '' } = useParams<{ programId: string }>();
   const outcomesQuery = useLearningOutcomes(programId);
   const deleteOutcome = useDeleteLearningOutcome(programId);
+  const program = useProgramContext(programId);
 
   const [modalState, setModalState] = useState<LearningOutcome | null | undefined>(null);
 
@@ -30,10 +33,12 @@ export function LearningOutcomesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Program Learning Outcomes</h1>
-        <Button onClick={() => setModalState(undefined)}>Add outcome</Button>
-      </div>
+      <PageHeader
+        title="Program Learning Outcomes"
+        description={program ? `${program.code} — ${program.name}` : undefined}
+        backTo={{ to: '/', label: 'Back to Dashboard' }}
+        actions={<Button onClick={() => setModalState(undefined)}>Add outcome</Button>}
+      />
 
       <div className="mt-6">
         {outcomesQuery.isLoading ? (
@@ -43,7 +48,12 @@ export function LearningOutcomesPage() {
         ) : outcomesQuery.isError ? (
           <p className="text-sm text-red-600 dark:text-red-400">Failed to load learning outcomes.</p>
         ) : (
-          <LearningOutcomesTable outcomes={outcomesQuery.data ?? []} onEdit={setModalState} onDelete={handleDelete} />
+          <LearningOutcomesTable
+            outcomes={outcomesQuery.data ?? []}
+            onEdit={setModalState}
+            onDelete={handleDelete}
+            onAdd={() => setModalState(undefined)}
+          />
         )}
       </div>
 

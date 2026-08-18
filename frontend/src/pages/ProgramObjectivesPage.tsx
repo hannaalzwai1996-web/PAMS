@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
+import { PageHeader } from '@/components/ui/PageHeader';
 import {
   useProgramObjectives,
   useDeleteProgramObjective,
 } from '@/features/program-objectives/hooks/useProgramObjectives';
+import { useProgramContext } from '@/features/programs/hooks/useProgramContext';
 import { ProgramObjectivesTable } from '@/features/program-objectives/components/ProgramObjectivesTable';
 import { ProgramObjectiveFormModal } from '@/features/program-objectives/components/ProgramObjectiveFormModal';
 import { toApiError } from '@/utils/apiError';
@@ -22,6 +24,7 @@ export function ProgramObjectivesPage() {
   // return below only affects what's rendered, not which hooks ran.
   const objectivesQuery = useProgramObjectives(programId);
   const deleteObjective = useDeleteProgramObjective(programId);
+  const program = useProgramContext(programId);
 
   const [modalState, setModalState] = useState<ProgramObjective | null | undefined>(null);
 
@@ -37,10 +40,12 @@ export function ProgramObjectivesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Program Objectives</h1>
-        <Button onClick={() => setModalState(undefined)}>Add objective</Button>
-      </div>
+      <PageHeader
+        title="Program Objectives"
+        description={program ? `${program.code} — ${program.name}` : undefined}
+        backTo={{ to: '/', label: 'Back to Dashboard' }}
+        actions={<Button onClick={() => setModalState(undefined)}>Add objective</Button>}
+      />
 
       <div className="mt-6">
         {objectivesQuery.isLoading ? (
@@ -54,6 +59,7 @@ export function ProgramObjectivesPage() {
             objectives={objectivesQuery.data ?? []}
             onEdit={setModalState}
             onDelete={handleDelete}
+            onAdd={() => setModalState(undefined)}
           />
         )}
       </div>

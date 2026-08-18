@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { useMatrix, useGenerateMatrix } from '@/features/matrix/hooks/useMatrix';
 import { matrixService } from '@/features/matrix/matrixService';
+import { useProgramContext } from '@/features/programs/hooks/useProgramContext';
 import { MatrixGridView } from '@/features/matrix/components/MatrixGridView';
 import { MatrixSummaryBar } from '@/features/matrix/components/MatrixSummaryBar';
 import { MatrixCellModal, type SelectedCell } from '@/features/matrix/components/MatrixCellModal';
@@ -19,6 +21,7 @@ export function MatrixPage() {
   const { programId = '' } = useParams<{ programId: string }>();
   const matrixQuery = useMatrix(programId);
   const generateMatrix = useGenerateMatrix(programId);
+  const program = useProgramContext(programId);
 
   const [selectedCell, setSelectedCell] = useState<SelectedCell | null>(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -52,25 +55,29 @@ export function MatrixPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">PO–PLO Matrix</h1>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => void handleGenerate(false)} isLoading={generateMatrix.isPending}>
-            Generate
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => void handleGenerate(true)}
-            isLoading={generateMatrix.isPending}
-            title="Refreshes previously auto-generated cells; never touches manually edited ones"
-          >
-            Regenerate (force)
-          </Button>
-          <Button variant="secondary" onClick={() => void handleExport()} isLoading={isExporting}>
-            Export CSV
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="PO–PLO Matrix"
+        description={program ? `${program.code} — ${program.name}` : 'Program Objective ↔ Learning Outcome alignment'}
+        backTo={{ to: '/', label: 'Back to Dashboard' }}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => void handleGenerate(false)} isLoading={generateMatrix.isPending}>
+              Generate
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => void handleGenerate(true)}
+              isLoading={generateMatrix.isPending}
+              title="Refreshes previously auto-generated cells; never touches manually edited ones"
+            >
+              Regenerate (force)
+            </Button>
+            <Button variant="secondary" onClick={() => void handleExport()} isLoading={isExporting}>
+              Export CSV
+            </Button>
+          </>
+        }
+      />
 
       <div className="mt-6 space-y-4">
         {matrixQuery.isLoading ? (

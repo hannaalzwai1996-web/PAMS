@@ -3,6 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Textarea';
 import { FormField } from '@/components/ui/FormField';
 import { useCreateLearningOutcome, useUpdateLearningOutcome } from '../hooks/useLearningOutcomes';
 import { toApiError } from '@/utils/apiError';
@@ -62,13 +63,12 @@ export function LearningOutcomeFormModal({ programId, outcome, onClose }: Learni
         </FormField>
 
         <FormField label="Statement" htmlFor="outcome-statement" error={error?.fieldError('statement')}>
-          <textarea
+          <Textarea
             id="outcome-statement"
             required
             rows={3}
             value={statement}
             onChange={(event) => setStatement(event.target.value)}
-            className="block w-full rounded-md border-0 px-3 py-1.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-white dark:ring-gray-600"
           />
         </FormField>
 

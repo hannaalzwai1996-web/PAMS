@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { UsersIcon } from '@/components/icons';
 import { useUsers, useUpdateUser, useDeleteUser } from '@/features/users/hooks/useUsers';
 import { UsersTable } from '@/features/users/components/UsersTable';
 import { CreateUserModal } from '@/features/users/components/CreateUserModal';
@@ -35,10 +38,11 @@ export function UsersPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Users</h1>
-        <Button onClick={() => setIsCreateOpen(true)}>Create user</Button>
-      </div>
+      <PageHeader
+        title="Users"
+        description="Manage accounts, roles, and access for administrators, QA officers, and program coordinators."
+        actions={<Button onClick={() => setIsCreateOpen(true)}>Create user</Button>}
+      />
 
       <div className="mt-6">
         {usersQuery.isLoading ? (
@@ -47,6 +51,12 @@ export function UsersPage() {
           </div>
         ) : usersQuery.isError ? (
           <p className="text-sm text-red-600 dark:text-red-400">Failed to load users.</p>
+        ) : usersQuery.data && usersQuery.data.data.length === 0 ? (
+          <EmptyState
+            icon={<UsersIcon className="h-6 w-6" />}
+            title="No users yet"
+            description={'Use "Create user" above to add the first account.'}
+          />
         ) : (
           <>
             <UsersTable

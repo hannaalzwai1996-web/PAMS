@@ -9,6 +9,11 @@ const ROLE_COLOR: Record<string, 'yellow' | 'blue' | 'green'> = {
   program_coordinator: 'green',
 };
 
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? '') + (parts[parts.length - 1]?.[0] ?? '')).toUpperCase();
+}
+
 interface UsersTableProps {
   users: User[];
   currentUserId: string | undefined;
@@ -35,20 +40,29 @@ export function UsersTable({ users, currentUserId, onEdit, onToggleActive, onDel
 
           return (
             <TableRow key={user.id}>
-              <TableCell>{user.name}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                    {initials(user.name)}
+                  </span>
+                  <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
+                </div>
+              </TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
-                {user.roles.map((role) => (
-                  <Badge key={role} color={ROLE_COLOR[role] ?? 'gray'}>
-                    {role.replace('_', ' ')}
-                  </Badge>
-                ))}
+                <div className="flex flex-wrap gap-1">
+                  {user.roles.map((role) => (
+                    <Badge key={role} color={ROLE_COLOR[role] ?? 'gray'}>
+                      {role.replace('_', ' ')}
+                    </Badge>
+                  ))}
+                </div>
               </TableCell>
               <TableCell>
                 <Badge color={user.is_active ? 'green' : 'red'}>{user.is_active ? 'Active' : 'Inactive'}</Badge>
               </TableCell>
               <TableCell>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-1">
                   <Button variant="ghost" onClick={() => onEdit(user)}>
                     Edit
                   </Button>
@@ -61,7 +75,7 @@ export function UsersTable({ users, currentUserId, onEdit, onToggleActive, onDel
                     {user.is_active ? 'Deactivate' : 'Activate'}
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant="ghost-danger"
                     disabled={isSelf}
                     title={isSelf ? "You can't delete your own account" : undefined}
                     onClick={() => onDelete(user)}

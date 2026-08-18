@@ -1,15 +1,20 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
-import { cn } from '@/utils/cn';
+import { Sidebar, MobileSidebar } from '@/components/layout/Sidebar';
+import { CheckBadgeIcon, LogoutIcon, MenuIcon } from '@/components/icons';
 
-const navLinkClasses = ({ isActive }: { isActive: boolean }) =>
-  cn(
-    'rounded-md px-3 py-2 text-sm font-medium',
-    isActive
-      ? 'bg-indigo-600 text-white'
-      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800',
-  );
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'Administrator',
+  qa_officer: 'Quality Assurance Officer',
+  program_coordinator: 'Program Coordinator',
+};
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? '') + (parts[parts.length - 1]?.[0] ?? '')).toUpperCase();
+}
 
 /**
  * The shell every authenticated page renders inside (via ProtectedRoute's
@@ -19,36 +24,55 @@ const navLinkClasses = ({ isActive }: { isActive: boolean }) =>
  * here is a UX nicety, not a security boundary.
  */
 export function AppLayout() {
-  const { user, hasRole, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const roleLabel = user ? (ROLE_LABELS[user.roles[0]] ?? user.roles[0]) : '';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <header className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-6">
-            <span className="text-sm font-bold text-gray-900 dark:text-white">PAMS</span>
-            <nav className="flex gap-1">
-              <NavLink to="/" end className={navLinkClasses}>
-                Dashboard
-              </NavLink>
-              {hasRole('admin') && (
-                <NavLink to="/admin/users" className={navLinkClasses}>
-                  Users
-                </NavLink>
-              )}
-            </nav>
+      <Sidebar />
+      <MobileSidebar isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
+
+      <div className="lg:pl-64">
+        <header className="sticky top-0 z-20 border-b border-gray-200 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80">
+          <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                aria-label="Open navigation menu"
+                onClick={() => setIsMobileNavOpen(true)}
+                className="-ml-1 rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 lg:hidden"
+              >
+                <MenuIcon className="h-6 w-6" />
+              </button>
+              <span className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white lg:hidden">
+                <CheckBadgeIcon className="h-5 w-5 text-indigo-600" />
+                PAMS
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="hidden text-right sm:block">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{roleLabel}</p>
+              </div>
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
+                {user ? initials(user.name) : ''}
+              </span>
+              <Button variant="secondary" onClick={() => void logout()}>
+                <LogoutIcon className="h-4 w-4" />
+                <span className="hidden sm:inline">Log out</span>
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 dark:text-gray-400">{user?.name}</span>
-            <Button variant="secondary" onClick={() => void logout()}>
-              Log out
-            </Button>
+        </header>
+
+        <main className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto max-w-6xl">
+            <Outlet />
           </div>
-        </div>
-      </header>
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <Outlet />
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
