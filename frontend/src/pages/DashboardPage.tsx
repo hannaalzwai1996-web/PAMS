@@ -1,12 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Spinner } from '@/components/ui/Spinner';
 import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { usePrograms } from '@/features/programs/hooks/usePrograms';
+import { usePrograms, useDeleteProgram } from '@/features/programs/hooks/usePrograms';
 import { ProgramsGrid } from '@/features/programs/components/ProgramsGrid';
+import { ProgramFormModal } from '@/features/programs/components/ProgramFormModal';
+import { toApiError } from '@/utils/apiError';
 import { BookOpenIcon, BuildingIcon, CheckBadgeIcon, InboxIcon } from '@/components/icons';
+import type { Program } from '@/types/program';
 
 const ROLE_LABELS: Record<string, string> = {
   admin: 'Administrator',
@@ -15,10 +19,13 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 export function DashboardPage() {
-  const { user } = useAuth();
+  const { user, hasRole } = useAuth();
   const roleLabel = user?.roles.map((role) => ROLE_LABELS[role] ?? role).join(', ');
   const programsQuery = usePrograms();
+  const deleteProgram = useDeleteProgram();
   const programs = programsQuery.data ?? [];
+
+  const [modalProgramId, setModalProgramId] = useState<string | null | undefined>(null);
 
   const stats = useMemo(
     () => ({
@@ -30,9 +37,21 @@ export function DashboardPage() {
     [programsQuery.data],
   );
 
+  function handleDelete(program: Program) {
+    if (!window.confirm(`Delete program "${program.name}"? This cannot be undone.`)) return;
+
+    deleteProgram.mutate(program.id, {
+      onError: (error) => window.alert(toApiError(error).message),
+    });
+  }
+
   return (
     <div>
-      <PageHeader title={`Welcome, ${user?.name ?? ''}`} description={`Signed in as ${roleLabel}.`} />
+      <PageHeader
+        title={`Welcome, ${user?.name ?? ''}`}
+        description={`Signed in as ${roleLabel}.`}
+        actions={hasRole('admin') ? <Button onClick={() => setModalProgramId(undefined)}>Create program</Button> : undefined}
+      />
 
       {!programsQuery.isLoading && !programsQuery.isError && (
         <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -60,9 +79,15 @@ export function DashboardPage() {
             description="Programs you're assigned to, or every program in the system if you're an admin or QA officer, will show up here."
           />
         ) : (
-          <ProgramsGrid programs={programs} />
+          <ProgramsGrid
+            programs={programs}
+            onEdit={(program) => setModalProgramId(program.id)}
+            onDelete={handleDelete}
+          />
         )}
       </div>
+
+      <ProgramFormModal programId={modalProgramId} onClose={() => setModalProgramId(null)} />
     </div>
   );
 }

@@ -19,6 +19,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     require __DIR__.'/api/v1/health.php';
     require __DIR__.'/api/v1/auth.php';
     require __DIR__.'/api/v1/admin.php';
+    require __DIR__.'/api/v1/departments.php';
     require __DIR__.'/api/v1/programs.php';
     require __DIR__.'/api/v1/program-objectives.php';
     require __DIR__.'/api/v1/learning-outcomes.php';

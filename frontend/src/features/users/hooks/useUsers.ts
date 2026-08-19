@@ -65,3 +65,16 @@ export function useSyncPermissions() {
     onSuccess: invalidate,
   });
 }
+
+/**
+ * Users holding the `program_coordinator` role — the candidate list for
+ * the Program Coordinator-assignment picker (P0.2). A distinct query key
+ * from `useUsers()`'s paginated admin list so the two never collide or
+ * invalidate each other unexpectedly.
+ */
+export function useProgramCoordinatorCandidates() {
+  return useQuery({
+    queryKey: ['users', 'role', 'program_coordinator'],
+    queryFn: () => usersService.list(1, { role: 'program_coordinator', per_page: 100 }),
+  });
+}

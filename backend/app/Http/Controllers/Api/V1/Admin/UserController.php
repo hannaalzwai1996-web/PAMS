@@ -13,6 +13,7 @@ use App\Http\Requests\Admin\SyncUserPermissionsRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\User;
+use App\Support\Enums\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -29,9 +30,21 @@ class UserController extends Controller
 {
     public function __construct(private readonly UserService $users) {}
 
+    /**
+     * `?role=` is an optional filter added for the Program
+     * Coordinator-assignment picker (P0.2) — validated against the fixed
+     * Role enum rather than passed straight through, so an unrecognized
+     * value is silently ignored (falls back to the unfiltered list)
+     * instead of ever reaching Spatie's `role()` scope, which throws for
+     * an unknown role name.
+     */
     public function index(Request $request): AnonymousResourceCollection
     {
-        return UserResource::collection($this->users->list());
+        $role = $request->query('role');
+        $role = in_array($role, Role::values(), true) ? $role : null;
+        $perPage = max(1, min((int) $request->query('per_page', 15), 100));
+
+        return UserResource::collection($this->users->list($perPage, $role));
     }
 
     public function store(StoreUserRequest $request): JsonResponse

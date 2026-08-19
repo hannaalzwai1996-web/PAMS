@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { useAuth } from '@/hooks/useAuth';
 import { BuildingIcon, ChevronRightIcon, TargetIcon } from '@/components/icons';
 import type { Program, ProgramStatus } from '@/types/program';
 
@@ -17,7 +19,23 @@ const QUICK_LINKS = [
   { segment: 'matrix', label: 'Matrix' },
 ] as const;
 
-export function ProgramsGrid({ programs }: { programs: Program[] }) {
+interface ProgramsGridProps {
+  programs: Program[];
+  onEdit?: (program: Program) => void;
+  onDelete?: (program: Program) => void;
+}
+
+export function ProgramsGrid({ programs, onEdit, onDelete }: ProgramsGridProps) {
+  const { hasRole } = useAuth();
+  // A coordinator's program list is already server-scoped to only the
+  // programs they're assigned to (ProgramService::list() ->
+  // forCoordinator()), so "is this user a coordinator at all" is enough
+  // to know they may attempt to edit any card they can see here — the
+  // backend Policy (admin, or the assigned coordinator while draft) is
+  // still the actual enforcement, this only decides what to show.
+  const canEdit = hasRole('admin') || hasRole('program_coordinator');
+  const canDelete = hasRole('admin');
+
   if (programs.length === 0) {
     return (
       <EmptyState
@@ -67,6 +85,21 @@ export function ProgramsGrid({ programs }: { programs: Program[] }) {
               </Link>
             ))}
           </div>
+
+          {((canEdit && onEdit) || (canDelete && onDelete)) && (
+            <div className="mt-2 flex gap-1">
+              {canEdit && onEdit && (
+                <Button variant="ghost" onClick={() => onEdit(program)}>
+                  Edit
+                </Button>
+              )}
+              {canDelete && onDelete && (
+                <Button variant="ghost-danger" onClick={() => onDelete(program)}>
+                  Delete
+                </Button>
+              )}
+            </div>
+          )}
         </Card>
       ))}
     </div>

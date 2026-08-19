@@ -34,6 +34,14 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
      */
     public function paginate(int $perPage = 15): LengthAwarePaginator
     {
-        return $this->newQuery()->with(['roles.permissions', 'permissions'])->paginate($perPage);
+        return $this->paginateByRole($perPage);
+    }
+
+    public function paginateByRole(int $perPage = 15, ?string $role = null): LengthAwarePaginator
+    {
+        return $this->newQuery()
+            ->with(['roles.permissions', 'permissions'])
+            ->when($role, fn ($query) => $query->role($role))
+            ->paginate($perPage);
     }
 }

@@ -23,9 +23,15 @@ class UserService
 {
     public function __construct(private readonly UserRepositoryInterface $users) {}
 
-    public function list(int $perPage = 15): LengthAwarePaginator
+    /**
+     * `$role` is optional — added for the Program Coordinator-assignment
+     * picker (P0.2), which needs to list only `program_coordinator`
+     * users. Existing callers (the Users admin page) pass no role and see
+     * exactly the same unfiltered list as before.
+     */
+    public function list(int $perPage = 15, ?string $role = null): LengthAwarePaginator
     {
-        return $this->users->paginate($perPage);
+        return $this->users->paginateByRole($perPage, $role);
     }
 
     /**

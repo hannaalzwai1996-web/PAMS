@@ -21,6 +21,7 @@ class ProgramResource extends JsonResource
             'code' => $this->code,
             'name' => $this->name,
             'level' => $this->level,
+            'description' => $this->description,
             'status' => $this->status->value,
             'duration_years' => $this->duration_years,
             'department' => $this->whenLoaded('department', fn () => [
@@ -28,6 +29,11 @@ class ProgramResource extends JsonResource
                 'code' => $this->department->code,
                 'name' => $this->department->name,
             ]),
+            'coordinators' => $this->whenLoaded('coordinators', fn () => $this->coordinators->map(fn ($coordinator) => [
+                'id' => $coordinator->id,
+                'name' => $coordinator->name,
+                'email' => $coordinator->email,
+            ])),
             'objectives_count' => $this->whenCounted('objectives'),
             'learning_outcomes_count' => $this->whenCounted('learningOutcomes'),
             'created_at' => $this->created_at,

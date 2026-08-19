@@ -19,15 +19,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Minimal Program model — see docs/database/0001-database-design.md §3.4.
- * Exists as a dependency for Program Objectives (and future domain
- * modules); the Program workflow itself (create/submit/approve/version)
- * is not implemented here.
+ * Create/update (P0.1) and coordinator assignment (P0.2) are implemented
+ * via ProgramService; submit/approve/versioning remain future work.
  */
 #[Fillable(['department_id', 'code', 'name', 'level', 'description', 'duration_years', 'status', 'current_version_no'])]
 class Program extends Model
 {
     /** @use HasFactory<ProgramFactory> */
     use HasFactory, HasUlids, SoftDeletes;
+
+    /**
+     * The only levels ProgramFactory and the frontend's Program type have
+     * ever recognized — centralized here so StoreProgramRequest and
+     * UpdateProgramRequest validate against one source of truth instead
+     * of each hard-coding the same four strings.
+     *
+     * @var array<int, string>
+     */
+    public const LEVELS = ['diploma', 'bachelor', 'master', 'phd'];
 
     /**
      * Laravel's factory auto-discovery only strips the `App\Models\`

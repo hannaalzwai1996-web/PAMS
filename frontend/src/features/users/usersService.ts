@@ -8,8 +8,15 @@ import type { CreateUserPayload, Role, UpdateUserPayload, User } from '@/types/u
  * project rule: the frontend communicates only through REST APIs).
  */
 export const usersService = {
-  async list(page = 1): Promise<PaginatedResponse<User>> {
-    const response = await apiClient.get<PaginatedResponse<User>>('/admin/users', { params: { page } });
+  /**
+   * `role`/`per_page` are optional filters added for the Program
+   * Coordinator-assignment picker (P0.2) — `GET /admin/users?role=...`.
+   * Omitted, this is the exact same call the Users admin page already made.
+   */
+  async list(page = 1, options: { role?: Role; per_page?: number } = {}): Promise<PaginatedResponse<User>> {
+    const response = await apiClient.get<PaginatedResponse<User>>('/admin/users', {
+      params: { page, ...options },
+    });
 
     return response.data;
   },

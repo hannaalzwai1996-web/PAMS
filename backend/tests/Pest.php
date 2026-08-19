@@ -89,6 +89,17 @@ function makeCoordinatorFor(Program $program): User
 }
 
 /**
+ * Creates a user with the `qa_officer` role, not attached to any program.
+ */
+function makeQaOfficer(): User
+{
+    $qaOfficer = User::factory()->create();
+    $qaOfficer->assignRole('qa_officer');
+
+    return $qaOfficer;
+}
+
+/**
  * Seeds two Program Objectives and two Learning Outcomes on the given
  * program: one PEO/PLO pair with deliberate lexical overlap (for
  * PoPloMatrixService's auto-generation to find) and one pair with none.
